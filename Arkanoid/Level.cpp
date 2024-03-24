@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include "box2d/box2d.h" //TODO:REMOVE PHYSICS IN THIS FILE
 #include "Physics.h"
+#include <cmath>
 
 bool Level::init(SDL_Renderer* renderer, Physics& physics)
 {
@@ -45,7 +46,7 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
         for (int x = 0; x < LEVEL_WIDTH; ++x) {
             levelData[y][x] = levelRows[y][x];
             if (levelData[y][x] != '0') {
-                levelBodies[y][x] = physics.addBrick(x * blockWidth + blockWidth / 2, y * blockHeight + blockHeight / 2, calculateBlockWidth(), calculateBlockHeight(), true, true);
+                levelBodies[y][x] = physics.addBrick(x * blockWidth + blockWidth / 2, y * blockHeight + blockHeight / 2, calculateBlockWidth(), calculateBlockHeight());
             }
             else {
                 levelBodies[y][x] = nullptr;
@@ -54,9 +55,7 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
         }
     }
  
-    testBody = physics.addBrick(testX, testY, 50, calculateBlockHeight(), false, false);
-
-    SDL_Surface* surface = SDL_LoadBMP("SNES_ Arkanoid.BMP");
+    SDL_Surface* surface = SDL_LoadBMP(GAME_TEXTURE);
     if (!surface) {
         return false;
     }
@@ -79,31 +78,21 @@ void Level::draw(SDL_Renderer* renderer, Physics& physics)
     for (int y = 0; y < LEVEL_HEIGHT; ++y) {
         for (int x = 0; x < LEVEL_WIDTH; ++x) {
             if (auto brickPhysics = levelBodies[y][x]) {
+                auto brickContacts = brickPhysics->GetContactList();
+                if (rand() % 10000 < 10 || (brickContacts && brickContacts->contact->GetFixtureA()->GetBody()->GetLinearVelocity().Length() > 1)) {
+                    brickPhysics->SetAwake(true);
+                    brickPhysics->SetGravityScale(1);
+                }
                 auto brickPos = brickPhysics->GetPosition();
                 auto brickRot = brickPhysics->GetAngle();
 
-                SDL_Rect srcRect = { 158, 83, 15, 7 };
+                SDL_Rect srcRect = BRICK_TEX_RECT;
                 SDL_Rect blockRect = { static_cast<int>(brickPos.x) - blockWidth / 2, static_cast<int>(brickPos.y) - blockHeight / 2, blockWidth, blockHeight};
                 
                 SDL_RenderCopyEx(renderer, texture, &srcRect, &blockRect, RADTODEG(brickRot), NULL, SDL_RendererFlip());
             }
         }
     }
-    bool awake = testBody->IsAwake();
-    auto pos = testBody->GetPosition();
-
-    testX = static_cast<int>(pos.x) - 25;
-    testY = static_cast<int>(pos.y) - blockHeight / 2;
-    
-    SDL_Rect blockRect = { testX, testY, 50, blockHeight };
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
-    SDL_RenderFillRect(renderer, &blockRect);
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-    SDL_RenderDrawRect(renderer, &blockRect);
 }
 
 constexpr int Level::calculateBlockWidth()

@@ -203,5 +203,8 @@
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_contact.h">
       <Filter>ThirdParty\Box2D</Filter>
     </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

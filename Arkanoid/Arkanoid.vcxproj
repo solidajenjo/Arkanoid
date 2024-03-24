@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_circle_contact.h" />
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_polygon_contact.h" />
@@ -168,13 +169,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL2_ttf-2.22.0\include;$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL2_ttf-2.22.0\lib\x64;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2_ttf.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
@@ -188,15 +189,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL2_ttf-2.22.0\include;$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL2_ttf-2.22.0\lib\x64;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2_ttf.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>

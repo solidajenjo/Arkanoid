@@ -20,7 +20,6 @@ private:
 
 	int testX = 400, testY = 500;
 	
-	class b2Body* testBody = nullptr;
 	struct SDL_Texture* texture = nullptr;
 };
 
