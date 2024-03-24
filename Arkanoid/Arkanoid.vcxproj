@@ -21,10 +21,66 @@
   <ItemGroup>
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_broad_phase.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_chain_shape.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_circle_shape.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_collide_circle.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_collide_edge.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_collide_polygon.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_collision.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_distance.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_dynamic_tree.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_edge_shape.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_polygon_shape.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_time_of_impact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_block_allocator.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_draw.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_math.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_settings.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_stack_allocator.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_timer.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_body.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_circle_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_polygon_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_circle_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_contact_manager.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_contact_solver.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_distance_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_edge_circle_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_edge_polygon_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_fixture.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_friction_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_gear_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_island.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_motor_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_mouse_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_circle_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_contact.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_prismatic_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_pulley_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_revolute_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_weld_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_wheel_joint.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_world.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_world_callbacks.cpp" />
+    <ClCompile Include="ThirdParty\box2d-2.4.1\src\rope\b2_rope.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_circle_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_polygon_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_circle_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_contact_solver.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_edge_circle_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_edge_polygon_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_island.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_circle_contact.h" />
+    <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_contact.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -112,7 +168,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,7 +188,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Arkanoid\ThirdParty\box2d-2.4.1\include;$(SolutionDir)\Arkanoid\ThirdParty\SDL-release-2.30.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

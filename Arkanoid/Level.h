@@ -4,11 +4,10 @@
 class Level {
 
 public:
-	// Constructor to initialize the level with zeros
-	Level();
 
-	// Function to draw the level on the SDL renderer
-	void draw(struct SDL_Renderer* renderer);
+	bool init(struct SDL_Renderer* renderer, class Physics& physics);
+	
+	void draw(struct SDL_Renderer* renderer, class Physics& physics);
 	
 private:
 
@@ -17,6 +16,12 @@ private:
 
 	// Level data represented as a 2D char array
 	char levelData[LEVEL_HEIGHT][LEVEL_WIDTH];
+	class b2Body* levelBodies[LEVEL_HEIGHT][LEVEL_WIDTH];
+
+	int testX = 400, testY = 500;
+	
+	class b2Body* testBody = nullptr;
+	struct SDL_Texture* texture = nullptr;
 };
 
 
