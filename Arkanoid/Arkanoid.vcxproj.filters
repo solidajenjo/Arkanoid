@@ -165,6 +165,9 @@
     <ClCompile Include="ThirdParty\box2d-2.4.1\src\common\b2_timer.cpp">
       <Filter>ThirdParty\Box2D</Filter>
     </ClCompile>
+    <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Level.h">
@@ -204,6 +207,9 @@
       <Filter>ThirdParty\Box2D</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

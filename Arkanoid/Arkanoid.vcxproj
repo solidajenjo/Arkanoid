@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -69,6 +70,7 @@
     <ClCompile Include="ThirdParty\box2d-2.4.1\src\rope\b2_rope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="main.h" />

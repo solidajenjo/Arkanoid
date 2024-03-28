@@ -11,9 +11,6 @@ public:
 	
 private:
 
-	constexpr int calculateBlockWidth();
-	constexpr int calculateBlockHeight();
-
 	// Level data represented as a 2D char array
 	char levelData[LEVEL_HEIGHT][LEVEL_WIDTH];
 	class b2Body* levelBodies[LEVEL_HEIGHT][LEVEL_WIDTH];

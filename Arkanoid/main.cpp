@@ -5,6 +5,7 @@
 #include "Physics.h"
 #include <string>
 #include "main.h"
+#include "Ball.h"
 
 
 int main(int argc, char* argv[])
@@ -52,6 +53,9 @@ int main(int argc, char* argv[])
     
     if (level.init(renderer, physics)) {
 
+        Ball ball;
+        ball.init(physics);
+
         int lastFrameTime = SDL_GetTicks(); // Get starting time
 
         // Wait for a key press to close the window
@@ -67,12 +71,13 @@ int main(int argc, char* argv[])
                     quit = true;
                 }
             }
-            
+            /*
             while (elapsedTime < TARGET_FRAME_TIME) {
                 elapsedTime = SDL_GetTicks() - lastFrameTime;
+                //physics.update();
                 SDL_Delay(1);
-            }
-            
+            } 
+            */
             lastFrameTime = SDL_GetTicks();
 
             // Set the background color (optional)
@@ -81,9 +86,12 @@ int main(int argc, char* argv[])
             // Clear the window
             SDL_RenderClear(renderer);
 
+            ball.update(renderer, physics);
             physics.update();
             level.draw(renderer, physics);
-
+#if 1
+            physics.debugDraw(renderer);
+#endif
             OnRenderUI(elapsedTime, font, renderer);
 
             // Update the screen
