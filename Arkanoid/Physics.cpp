@@ -15,6 +15,10 @@ void Physics::init()
 	b2Vec2 gravity(0.0f, 100.f); // Set gravity (adjust as needed)
 	world = new b2World(gravity);
 	world->SetAllowSleeping(true);
+
+    ballUserData.type = EntityType::Ball;
+    brickUserData.type = EntityType::Brick;
+    playerUserData.type = EntityType::Player;
 }
 
 void Physics::update()
@@ -32,11 +36,11 @@ void Physics::debugDraw(SDL_Renderer* renderer)
     world->DebugDraw();
 }
 
-b2Body* Physics::addBrick(int x, int y, int width, int height, bool bIsStatic, float initialRotation)
+b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
 {
     // Define body definition
     b2BodyDef bodyDef;
-    bodyDef.type = bIsStatic ? b2_staticBody : b2_dynamicBody;
+    bodyDef.type = bodyType;
 
     bodyDef.position.Set(static_cast<float>(x), static_cast<float>(y));
     bodyDef.angle = initialRotation;
@@ -47,18 +51,19 @@ b2Body* Physics::addBrick(int x, int y, int width, int height, bool bIsStatic, f
     // Define fixture shape (box in this case)
     b2PolygonShape boxShape;
     // Width and height of the box. Slightly reduced to prevent collision detection with nearby bricks
-    boxShape.SetAsBox(static_cast<float>(width) *.49f, static_cast<float>(height) * .49f);
+    boxShape.SetAsBox(static_cast<float>(width) *.49f, static_cast<float>(height) * .5f);
     
     // Define fixture properties (material)
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &boxShape;
-    fixtureDef.density = 1.0f; // Density of the material
+    fixtureDef.density = BRICK_DENSITY;
 
     // Create the fixture and attach it to the body
     newBody->CreateFixture(&fixtureDef);
 
     newBody->SetLinearDamping(PHYSICS_BRICK_LINEAR_DAMPING);    
     newBody->SetAngularDamping(PHYSICS_BRICK_ANGULAR_DAMPING);    
+    newBody->SetUserData(&brickUserData);
 
     return newBody;
 }
@@ -80,8 +85,8 @@ b2Body* Physics::addBall(int x, int y, float radius)
     // Define fixture properties (material)
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circleShape;
-    fixtureDef.density = 10.f; // Density of the material
-    fixtureDef.restitution = 2.f;
+    fixtureDef.density = BALL_DENSITY;
+    fixtureDef.restitution = BALL_RESTITUTION;
 
     // Create the fixture and attach it to the body
     newBody->CreateFixture(&fixtureDef);
@@ -90,7 +95,14 @@ b2Body* Physics::addBall(int x, int y, float radius)
     newBody->SetLinearVelocity({ static_cast<float>((rand() % 10) - 5) , static_cast<float>((rand() % 10) - 5) });
     newBody->SetGravityScale(0);    
 
+    newBody->SetUserData(&ballUserData);
+
     return newBody;
+}
+
+void Physics::removeBody(b2Body* body)
+{
+    world->DestroyBody(body);
 }
 
 void Box2DDebugDraw::SetRenderer(SDL_Renderer* renderer)
@@ -100,14 +112,14 @@ void Box2DDebugDraw::SetRenderer(SDL_Renderer* renderer)
 
 void Box2DDebugDraw::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
 {
-    SDL_Point sdlPoints[8]; //NOTE:Max vertices per poly 8 increase this if needed
+    SDL_Point sdlPoints[36]; //NOTE:Max vertices per poly 36 increase this if needed
 
-    for (int i = 0; i < vertexCount && i < 8; ++i)
+    for (int i = 0; i < vertexCount && i < vertexCount; ++i)
     {
         sdlPoints[i].x = PHYSICS_TO_PIXEL(vertices[i].x);
         sdlPoints[i].y = PHYSICS_TO_PIXEL(vertices[i].y);
     }
-    // Set the render color (example: blue)
+    
     SDL_SetRenderDrawColor(renderer, color.r * 255, color.g * 255, color.b * 255, color.a * 255);
 
     SDL_RenderDrawLines(renderer, sdlPoints, vertexCount);
@@ -120,12 +132,30 @@ void Box2DDebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount,
 
 void Box2DDebugDraw::DrawCircle(const b2Vec2& center, float radius, const b2Color& color)
 {
-    //IMPLEMENT IF NEEDED
+    b2Vec2 p = center + b2Vec2(0.f, radius);
+    constexpr float rotPerSector = 10.f;
+    constexpr int vertexCount = static_cast<int>(360.f / rotPerSector);
+
+    b2Vec2 vertices[vertexCount + 1];
+    float theta = 0.f;
+    int i = 0;
+
+    for (; theta <= 360.f; theta += rotPerSector, ++i)
+    {
+        vertices[i] = p - center;
+        b2Vec2& rotP = vertices[i];
+        rotP.x = cos(DEGTORAD(theta)) * rotP.x - sin(DEGTORAD(theta)) * rotP.y;
+        rotP.y = sin(DEGTORAD(theta)) * rotP.x + cos(DEGTORAD(theta)) * rotP.y; 
+        vertices[i].Normalize();
+        vertices[i] *= radius;
+        vertices[i] += center;
+    }
+    DrawPolygon(vertices, vertexCount, color);
 }
 
 void Box2DDebugDraw::DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color)
 {
-    //IMPLEMENT IF NEEDED
+    DrawCircle(center, radius, color);
 }
 
 void Box2DDebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)

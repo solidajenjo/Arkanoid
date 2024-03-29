@@ -16,7 +16,7 @@ void Ball::update(SDL_Renderer* renderer, Physics& physics)
 	auto ballPos = ballPhysics->GetPosition();
 	auto ballVelocity = ballPhysics->GetLinearVelocity();
 	ballVelocity.Normalize();
-	ballVelocity *= 150.f;
+	ballVelocity *= BALL_SPEED;
 	ballPhysics->SetLinearVelocity(ballVelocity);
 
 	SDL_Rect boxRect;

@@ -1,6 +1,6 @@
 #include "Level.h"
 #include "SDL.h"
-#include "box2d/box2d.h" //TODO:REMOVE PHYSICS IN THIS FILE
+#include "box2d/box2d.h" 
 #include "Physics.h"
 #include <cmath>
 
@@ -48,7 +48,7 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
                     PIXEL_TO_PHYSICS(y * BLOCK_HEIGHT + BLOCK_HEIGHT / 2),
                     PIXEL_TO_PHYSICS(BLOCK_WIDTH),
                     PIXEL_TO_PHYSICS(BLOCK_HEIGHT),
-                    false);
+                    b2_kinematicBody);
             }
             else {
                 levelBodies[y][x] = nullptr;
@@ -59,13 +59,13 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
     
     //Side and top margins they don't need to be tracked, Sides are slightly rotated to prevent endless horizontal bouncing, also the top
     //LEFT
-    physics.addBrick(1, PIXEL_TO_PHYSICS(SCREEN_HEIGHT / 2), PIXEL_TO_PHYSICS(5), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), true, 0.03f);
+    physics.addBrick(1, PIXEL_TO_PHYSICS(SCREEN_HEIGHT / 2), PIXEL_TO_PHYSICS(5), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), b2_staticBody, 0.03f);
     //RIGHT
-    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH) - 1, PIXEL_TO_PHYSICS(SCREEN_HEIGHT / 2), PIXEL_TO_PHYSICS(5), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), true, -0.03f);
+    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH) - 1, PIXEL_TO_PHYSICS(SCREEN_HEIGHT / 2), PIXEL_TO_PHYSICS(5), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), b2_staticBody, -0.03f);
     //TOP
-    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), 0, PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), true, 0.01f);
+    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), 0, PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), b2_staticBody, 0.01f);
     //BOTTOM
-    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), true);
+    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), b2_staticBody);
  
     
     SDL_Surface* surface = SDL_LoadBMP(GAME_TEXTURE);
@@ -88,12 +88,24 @@ void Level::draw(SDL_Renderer* renderer, Physics& physics)
     for (int y = 0; y < LEVEL_HEIGHT; ++y) {
         for (int x = 0; x < LEVEL_WIDTH; ++x) {
             if (auto brickPhysics = levelBodies[y][x]) {
-                /*
+                
                 auto brickContacts = brickPhysics->GetContactList();
-                if (rand() % 10000 < 10 || (brickContacts && brickContacts->contact->GetFixtureA()->GetBody()->GetLinearVelocity().Length() > 1)) {
-                    brickPhysics->ApplyLinearImpulse({ static_cast<float>((rand() % 2000) - 1000), 0 }, brickPhysics->GetPosition(), true);                    
+                if (brickContacts && brickContacts->other->GetType() == b2_dynamicBody && brickPhysics->GetType() == b2_kinematicBody)
+                {
+                    auto userData = (PhysicsUserData*)brickContacts->other->GetUserData().pointer;
+                    if (userData->type == EntityType::Ball)
+                    {
+                        physics.removeBody(brickPhysics);
+                        levelBodies[y][x] = physics.addBrick(
+                            PIXEL_TO_PHYSICS(x * BLOCK_WIDTH + BLOCK_WIDTH / 2),
+                            PIXEL_TO_PHYSICS(y * BLOCK_HEIGHT + BLOCK_HEIGHT / 2),
+                            PIXEL_TO_PHYSICS(BLOCK_WIDTH),
+                            PIXEL_TO_PHYSICS(BLOCK_HEIGHT),
+                            b2_dynamicBody);
+                        levelBodies[y][x]->SetAwake(true);
+                    }
                 }
-                */
+               
                 auto brickPos = brickPhysics->GetPosition();
                 auto brickRot = brickPhysics->GetAngle();
 

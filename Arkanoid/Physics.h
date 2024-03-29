@@ -1,6 +1,19 @@
 #pragma once
 
 #include "box2d/b2_draw.h"
+#include "box2d/b2_body.h"
+
+enum class EntityType
+{
+	Ball,
+	Brick,
+	Player
+};
+
+struct PhysicsUserData
+{
+	EntityType type = EntityType::Ball;
+};
 
 class Physics
 {
@@ -15,12 +28,18 @@ public:
 	void debugDraw(struct SDL_Renderer* renderer);
 
 	//Adds a brick to the world simulation and returns its physics proxy
-	class b2Body* addBrick(int x, int y, int width, int height, bool bIsStatic, float initialRotation = 0.f);
+	class b2Body* addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
 	class b2Body* addBall(int x, int y, float radius);
+
+	void removeBody(b2Body* body);
 
 private:
 
 	class b2World* world = nullptr;
+	
+	PhysicsUserData ballUserData;
+	PhysicsUserData brickUserData;
+	PhysicsUserData playerUserData;
 };
 
 class Box2DDebugDraw : public b2Draw

@@ -71,13 +71,13 @@ int main(int argc, char* argv[])
                     quit = true;
                 }
             }
-            /*
+            
             while (elapsedTime < TARGET_FRAME_TIME) {
                 elapsedTime = SDL_GetTicks() - lastFrameTime;
                 //physics.update();
                 SDL_Delay(1);
             } 
-            */
+            
             lastFrameTime = SDL_GetTicks();
 
             // Set the background color (optional)

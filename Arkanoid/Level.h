@@ -13,7 +13,7 @@ private:
 
 	// Level data represented as a 2D char array
 	char levelData[LEVEL_HEIGHT][LEVEL_WIDTH];
-	class b2Body* levelBodies[LEVEL_HEIGHT][LEVEL_WIDTH];
+	class b2Body* levelBodies[LEVEL_HEIGHT][LEVEL_WIDTH];	
 
 	int testX = 400, testY = 500;
 	
