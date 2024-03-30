@@ -43,17 +43,13 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
         for (int x = 0; x < LEVEL_WIDTH; ++x) {
             levelData[y][x] = levelRows[y][x];
             if (levelData[y][x] != '0') {
-                levelBodies[y][x] = physics.addBrick(
+                physics.addBrick(
                     PIXEL_TO_PHYSICS(x * BLOCK_WIDTH + BLOCK_WIDTH / 2),
                     PIXEL_TO_PHYSICS(y * BLOCK_HEIGHT + BLOCK_HEIGHT / 2),
                     PIXEL_TO_PHYSICS(BLOCK_WIDTH),
                     PIXEL_TO_PHYSICS(BLOCK_HEIGHT),
                     b2_kinematicBody);
-            }
-            else {
-                levelBodies[y][x] = nullptr;
-            }
-
+            }            
         }
     }
     
@@ -85,35 +81,13 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
 
 void Level::draw(SDL_Renderer* renderer, Physics& physics)
 {
-    for (int y = 0; y < LEVEL_HEIGHT; ++y) {
-        for (int x = 0; x < LEVEL_WIDTH; ++x) {
-            if (auto brickPhysics = levelBodies[y][x]) {
-                
-                auto brickContacts = brickPhysics->GetContactList();
-                if (brickContacts && brickContacts->other->GetType() == b2_dynamicBody && brickPhysics->GetType() == b2_kinematicBody)
-                {
-                    auto userData = (PhysicsUserData*)brickContacts->other->GetUserData().pointer;
-                    if (userData->type == EntityType::Ball)
-                    {
-                        physics.removeBody(brickPhysics);
-                        levelBodies[y][x] = physics.addBrick(
-                            PIXEL_TO_PHYSICS(x * BLOCK_WIDTH + BLOCK_WIDTH / 2),
-                            PIXEL_TO_PHYSICS(y * BLOCK_HEIGHT + BLOCK_HEIGHT / 2),
-                            PIXEL_TO_PHYSICS(BLOCK_WIDTH),
-                            PIXEL_TO_PHYSICS(BLOCK_HEIGHT),
-                            b2_dynamicBody);
-                        levelBodies[y][x]->SetAwake(true);
-                    }
-                }
-               
-                auto brickPos = brickPhysics->GetPosition();
-                auto brickRot = brickPhysics->GetAngle();
+    for (auto brickPhysics : physics.getBricks()) {
+        auto brickPos = brickPhysics->GetPosition();
+        auto brickRot = brickPhysics->GetAngle();
 
-                SDL_Rect srcRect = BRICK_TEX_RECT;
-                SDL_Rect blockRect = { static_cast<int>(PHYSICS_TO_PIXEL(brickPos.x)) - BLOCK_WIDTH / 2, static_cast<int>(PHYSICS_TO_PIXEL(brickPos.y)) - BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT};
+        SDL_Rect srcRect = BRICK_TEX_RECT;
+        SDL_Rect blockRect = { static_cast<int>(PHYSICS_TO_PIXEL(brickPos.x)) - BLOCK_WIDTH / 2, static_cast<int>(PHYSICS_TO_PIXEL(brickPos.y)) - BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT};
                 
-                SDL_RenderCopyEx(renderer, texture, &srcRect, &blockRect, RADTODEG(brickRot), NULL, SDL_RendererFlip());
-            }
-        }
+        SDL_RenderCopyEx(renderer, texture, &srcRect, &blockRect, RADTODEG(brickRot), NULL, SDL_RendererFlip());
     }
 }

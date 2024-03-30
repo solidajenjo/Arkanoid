@@ -2,6 +2,8 @@
 
 #include "box2d/b2_draw.h"
 #include "box2d/b2_body.h"
+#include "box2d/b2_world_callbacks.h"
+#include <vector>
 
 enum class EntityType
 {
@@ -13,6 +15,14 @@ enum class EntityType
 struct PhysicsUserData
 {
 	EntityType type = EntityType::Ball;
+};
+
+class PhysicsContactListener : public b2ContactListener 
+{
+public:
+	void BeginContact(b2Contact* contact) override;
+
+	class Physics* physics = nullptr;
 };
 
 class Physics
@@ -27,9 +37,13 @@ public:
 
 	void debugDraw(struct SDL_Renderer* renderer);
 
+	void onShouldActivateBrick(b2Body* body);
+
 	//Adds a brick to the world simulation and returns its physics proxy
 	class b2Body* addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
 	class b2Body* addBall(int x, int y, float radius);
+
+	const std::vector<b2Body*>& getBricks();
 
 	void removeBody(b2Body* body);
 
@@ -40,6 +54,11 @@ private:
 	PhysicsUserData ballUserData;
 	PhysicsUserData brickUserData;
 	PhysicsUserData playerUserData;
+
+	PhysicsContactListener contactListener;
+
+	std::vector<b2Body*> bricksToEnable;
+	std::vector<b2Body*> bricks;
 };
 
 class Box2DDebugDraw : public b2Draw

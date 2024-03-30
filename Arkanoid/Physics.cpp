@@ -4,6 +4,7 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 #include <cmath>
+#include <iostream>
 
 Physics::~Physics()
 {
@@ -12,19 +13,35 @@ Physics::~Physics()
 
 void Physics::init()
 {
-	b2Vec2 gravity(0.0f, 100.f); // Set gravity (adjust as needed)
+	b2Vec2 gravity(0.0f, 10.f); // Set gravity (adjust as needed)
 	world = new b2World(gravity);
 	world->SetAllowSleeping(true);
+    world->SetContactListener(&contactListener);
+    contactListener.physics = this;
 
     ballUserData.type = EntityType::Ball;
     brickUserData.type = EntityType::Brick;
     playerUserData.type = EntityType::Player;
+
 }
 
 void Physics::update()
 {
     world->Step(PHYSICS_TIMESTEP, PHYSICS_VELOCITY_ITERATIONS, PHYSICS_POSITION_ITERATIONS);
 
+    if (!bricksToEnable.empty())
+    {
+        for (auto brick : bricksToEnable)
+        {
+            std::vector<b2Body*>::iterator it = std::remove(bricks.begin(), bricks.end(), brick);
+            bricks.erase(it);
+            auto pos = brick->GetPosition();
+            auto newBrick = addBrick(pos.x, pos.y, PIXEL_TO_PHYSICS(BLOCK_WIDTH), PIXEL_TO_PHYSICS(BLOCK_HEIGHT), b2_dynamicBody);
+            newBrick->SetAwake(true);
+            removeBody(brick);
+        }
+        bricksToEnable.clear();
+    }
 }
 
 void Physics::debugDraw(SDL_Renderer* renderer)
@@ -34,6 +51,11 @@ void Physics::debugDraw(SDL_Renderer* renderer)
     debugDraw.SetRenderer(renderer);
     world->SetDebugDraw(&debugDraw);
     world->DebugDraw();
+}
+
+void Physics::onShouldActivateBrick(b2Body* body)
+{
+    bricksToEnable.push_back(body);
 }
 
 b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
@@ -64,7 +86,10 @@ b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyTy
     newBody->SetLinearDamping(PHYSICS_BRICK_LINEAR_DAMPING);    
     newBody->SetAngularDamping(PHYSICS_BRICK_ANGULAR_DAMPING);    
     newBody->SetUserData(&brickUserData);
-
+    if (bodyType != b2_staticBody) //ignore static margins
+    {
+        bricks.push_back(newBody);
+    }
     return newBody;
 }
 
@@ -98,6 +123,11 @@ b2Body* Physics::addBall(int x, int y, float radius)
     newBody->SetUserData(&ballUserData);
 
     return newBody;
+}
+
+const std::vector<b2Body*>& Physics::getBricks()
+{
+    return bricks;
 }
 
 void Physics::removeBody(b2Body* body)
@@ -171,4 +201,25 @@ void Box2DDebugDraw::DrawTransform(const b2Transform& xf)
 void Box2DDebugDraw::DrawPoint(const b2Vec2& p, float size, const b2Color& color)
 {
     //IMPLEMENT IF NEEDED
+}
+
+void PhysicsContactListener::BeginContact(b2Contact* contact)
+{
+    // Get the colliding bodies
+    b2Body* bodyA = contact->GetFixtureA()->GetBody();
+    b2Body* bodyB = contact->GetFixtureB()->GetBody();
+
+    auto userDataA = (PhysicsUserData*)bodyA->GetUserData().pointer;
+    auto userDataB = (PhysicsUserData*)bodyB->GetUserData().pointer;
+    if (userDataA->type != userDataB->type)
+    {
+        if (userDataA->type == EntityType::Brick && bodyA->GetType() == b2_kinematicBody)
+        {
+            physics->onShouldActivateBrick(bodyA);
+        }
+        if (userDataB->type == EntityType::Brick && bodyB->GetType() == b2_kinematicBody)
+        {
+            physics->onShouldActivateBrick(bodyB);
+        }
+    }
 }
