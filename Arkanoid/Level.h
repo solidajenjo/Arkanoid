@@ -12,7 +12,7 @@ public:
 private:
 
 	// Level data represented as a 2D char array
-	char levelData[LEVEL_HEIGHT][LEVEL_WIDTH];
+	char levelData[LEVEL_HEIGHT][LEVEL_WIDTH] = {};
 
 	int testX = 400, testY = 500;
 	

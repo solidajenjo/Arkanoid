@@ -42,9 +42,11 @@ public:
 	void onShouldDestroyBrick(b2Body* body);
 
 	//Adds a brick to the world simulation and returns its physics proxy
-	class b2Body* addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
-	class b2Body* addKillZone(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
-	class b2Body* addBall(int x, int y, float radius);
+	b2Body* addBrick(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation = 0.f);
+	b2Body* addKillZone(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation = 0.f);
+	b2Body* addBall(float x, float y, float radius);
+	b2Body* addPlayer(float x, float y, float width, float height);
+
 
 	const std::vector<b2Body*>& getBricks();
 
@@ -52,7 +54,8 @@ public:
 
 private:
 
-	class b2World* world = nullptr;
+	b2World* world = nullptr;
+	b2Body* killZone = nullptr;
 	
 	PhysicsUserData ballUserData;
 	PhysicsUserData brickUserData;

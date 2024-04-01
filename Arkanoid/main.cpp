@@ -4,9 +4,12 @@
 #include "Level.h"
 #include "Physics.h"
 #include <string>
-#include "main.h"
 #include "Ball.h"
+#include "Player.h"
 
+#if _DEBUG
+void OnRenderDebugUI(int elapsedTime, TTF_Font* font, SDL_Renderer* renderer);
+#endif
 
 int main(int argc, char* argv[])
 {    
@@ -50,21 +53,21 @@ int main(int argc, char* argv[])
     Physics physics;
     physics.init();
     Level level;
+    Player player;
     
-    if (level.init(renderer, physics)) {
+    if (level.init(renderer, physics) && player.init(renderer, physics)){
 
         Ball ball;
         ball.init(physics);
 
-        int lastFrameTime = SDL_GetTicks(); // Get starting time
+        int lastFrameTime = SDL_GetTicks(); 
 
-        // Wait for a key press to close the window
         SDL_Event event;
         bool quit = false;
         while (!quit) {
             
-            int currentFrameTime = SDL_GetTicks(); // Get current time
-            int elapsedTime = currentFrameTime - lastFrameTime; // Time since last frame
+            int currentFrameTime = SDL_GetTicks(); 
+            int elapsedTime = currentFrameTime - lastFrameTime; 
 
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_QUIT) {
@@ -80,21 +83,19 @@ int main(int argc, char* argv[])
             
             lastFrameTime = SDL_GetTicks();
 
-            // Set the background color (optional)
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // black
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
 
-            // Clear the window
             SDL_RenderClear(renderer);
 
             ball.update(renderer, physics);
             physics.update();
             level.draw(renderer, physics);
-#if 1
+            player.draw(renderer);
+#if _DEBUG
             physics.debugDraw(renderer);
+            OnRenderDebugUI(elapsedTime, font, renderer);
 #endif
-            OnRenderUI(elapsedTime, font, renderer);
 
-            // Update the screen
             SDL_RenderPresent(renderer);
         }
     }
@@ -107,8 +108,8 @@ int main(int argc, char* argv[])
     
     return 0;
 }
-
-void OnRenderUI(int elapsedTime, TTF_Font* font, SDL_Renderer* renderer)
+#if _DEBUG
+void OnRenderDebugUI(int elapsedTime, TTF_Font* font, SDL_Renderer* renderer)
 {
     SDL_Color textColor = UI_COLOR;
     std::string msg = "Frame time: " + std::to_string(elapsedTime) + " FPS:" + std::to_string(static_cast<int>(1.f / static_cast<float>(elapsedTime) * 1000.f));
@@ -122,5 +123,5 @@ void OnRenderUI(int elapsedTime, TTF_Font* font, SDL_Renderer* renderer)
     textRect.h = textSurface->h;
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 }
-
+#endif
 

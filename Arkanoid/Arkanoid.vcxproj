@@ -23,6 +23,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_broad_phase.cpp" />
     <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_chain_shape.cpp" />
     <ClCompile Include="ThirdParty\box2d-2.4.1\src\collision\b2_circle_shape.cpp" />
@@ -73,8 +74,8 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_circle_contact.h" />
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_chain_polygon_contact.h" />
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_circle_contact.h" />

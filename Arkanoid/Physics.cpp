@@ -74,13 +74,13 @@ void Physics::onShouldDestroyBrick(b2Body* body)
     bricksToDestroy.push_back(body);
 }
 
-b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
+b2Body* Physics::addBrick(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation)
 {
     // Define body definition
     b2BodyDef bodyDef;
     bodyDef.type = bodyType;
 
-    bodyDef.position.Set(static_cast<float>(x), static_cast<float>(y));
+    bodyDef.position.Set(x, y);
     bodyDef.angle = initialRotation;
 
 	auto newBody = world->CreateBody(&bodyDef);
@@ -89,7 +89,7 @@ b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyTy
     // Define fixture shape (box in this case)
     b2PolygonShape boxShape;
     // Width and height of the box. Slightly reduced to prevent collision detection with nearby bricks
-    boxShape.SetAsBox(static_cast<float>(width) *.49f, static_cast<float>(height) * .5f);
+    boxShape.SetAsBox(width *.49f, height * .5f);
     
     // Define fixture properties (material)
     b2FixtureDef fixtureDef;
@@ -109,20 +109,21 @@ b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyTy
     return newBody;
 }
 
-b2Body* Physics::addKillZone(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
+b2Body* Physics::addKillZone(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation)
 {
     //Kill zone is like a brick but with different user data
     b2Body* newBody = addBrick(x, y, width, height, bodyType, initialRotation);
     newBody->SetUserData(&killZoneUserData);
+    killZone = newBody;
     return newBody;
 }
 
-b2Body* Physics::addBall(int x, int y, float radius)
+b2Body* Physics::addBall(float x, float y, float radius)
 {
     // Define body definition
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(static_cast<float>(x), static_cast<float>(y));
+    bodyDef.position.Set(x, y);
 
     auto newBody = world->CreateBody(&bodyDef);
     newBody->SetAwake(false);
@@ -145,6 +146,47 @@ b2Body* Physics::addBall(int x, int y, float radius)
     newBody->SetGravityScale(0);    
 
     newBody->SetUserData(&ballUserData);
+
+    return newBody;
+}
+
+b2Body* Physics::addPlayer(float x, float y, float width, float height)
+{
+    // Define body definition
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+
+    bodyDef.position.Set(x, y);
+
+    auto newBody = world->CreateBody(&bodyDef);
+    newBody->SetAwake(true);
+
+    // Define fixture shape (box in this case)
+    b2PolygonShape boxShape;
+    boxShape.SetAsBox(width, height);
+
+    // Define fixture properties (material)
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &boxShape;
+    fixtureDef.density = PLAYER_DENSITY;
+
+    // Create the fixture and attach it to the body
+    newBody->CreateFixture(&fixtureDef);
+
+    newBody->SetUserData(&playerUserData);
+
+    newBody->SetGravityScale(0.f);
+    newBody->SetLinearDamping(PHYSICS_PLAYER_LINEAR_DAMPING);
+
+    b2PrismaticJointDef jointDef;
+    jointDef.bodyA = killZone; 
+    jointDef.bodyB = newBody;
+    jointDef.localAxisA.Set(1.0f, 0.f);
+    jointDef.localAnchorA.Set(PLAYER_JOINT_LOCAL_ANCHOR);
+    jointDef.lowerTranslation = 0.0f;
+    jointDef.upperTranslation = 0.0f;
+
+    b2Joint* joint = world->CreateJoint(&jointDef);
 
     return newBody;
 }

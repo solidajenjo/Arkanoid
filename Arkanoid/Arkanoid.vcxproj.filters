@@ -168,6 +168,9 @@
     <ClCompile Include="Ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Level.h">
@@ -206,10 +209,10 @@
     <ClInclude Include="ThirdParty\box2d-2.4.1\src\dynamics\b2_polygon_contact.h">
       <Filter>ThirdParty\Box2D</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
+    <ClInclude Include="Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ball.h">
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
