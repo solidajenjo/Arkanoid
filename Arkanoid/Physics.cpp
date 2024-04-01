@@ -13,7 +13,7 @@ Physics::~Physics()
 
 void Physics::init()
 {
-	b2Vec2 gravity(0.0f, 10.f); // Set gravity (adjust as needed)
+	b2Vec2 gravity(GRAVITY); 
 	world = new b2World(gravity);
 	world->SetAllowSleeping(true);
     world->SetContactListener(&contactListener);
@@ -22,6 +22,7 @@ void Physics::init()
     ballUserData.type = EntityType::Ball;
     brickUserData.type = EntityType::Brick;
     playerUserData.type = EntityType::Player;
+    killZoneUserData.type = EntityType::KillZone;
 
 }
 
@@ -42,6 +43,16 @@ void Physics::update()
         }
         bricksToEnable.clear();
     }
+    if (!bricksToDestroy.empty())
+    {
+        for (auto brick : bricksToDestroy)
+        {
+            std::vector<b2Body*>::iterator it = std::remove(bricks.begin(), bricks.end(), brick);
+            bricks.erase(it);
+            removeBody(brick);
+        }
+        bricksToDestroy.clear();
+    }
 }
 
 void Physics::debugDraw(SDL_Renderer* renderer)
@@ -56,6 +67,11 @@ void Physics::debugDraw(SDL_Renderer* renderer)
 void Physics::onShouldActivateBrick(b2Body* body)
 {
     bricksToEnable.push_back(body);
+}
+
+void Physics::onShouldDestroyBrick(b2Body* body)
+{
+    bricksToDestroy.push_back(body);
 }
 
 b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
@@ -90,6 +106,14 @@ b2Body* Physics::addBrick(int x, int y, int width, int height, b2BodyType bodyTy
     {
         bricks.push_back(newBody);
     }
+    return newBody;
+}
+
+b2Body* Physics::addKillZone(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation)
+{
+    //Kill zone is like a brick but with different user data
+    b2Body* newBody = addBrick(x, y, width, height, bodyType, initialRotation);
+    newBody->SetUserData(&killZoneUserData);
     return newBody;
 }
 
@@ -213,6 +237,7 @@ void PhysicsContactListener::BeginContact(b2Contact* contact)
     auto userDataB = (PhysicsUserData*)bodyB->GetUserData().pointer;
     if (userDataA->type != userDataB->type)
     {
+        //If something collides with a brick and the brick its still kinematic activate it 
         if (userDataA->type == EntityType::Brick && bodyA->GetType() == b2_kinematicBody)
         {
             physics->onShouldActivateBrick(bodyA);
@@ -221,5 +246,15 @@ void PhysicsContactListener::BeginContact(b2Contact* contact)
         {
             physics->onShouldActivateBrick(bodyB);
         }
+    }
+
+    //Kill zone handling
+    if (userDataA->type == EntityType::KillZone && userDataB->type == EntityType::Brick)
+    {
+        physics->onShouldDestroyBrick(bodyB);
+    }
+    if (userDataB->type == EntityType::KillZone && userDataA->type == EntityType::Brick)
+    {
+        physics->onShouldDestroyBrick(bodyA);
     }
 }

@@ -9,7 +9,8 @@ enum class EntityType
 {
 	Ball,
 	Brick,
-	Player
+	Player,
+	KillZone
 };
 
 struct PhysicsUserData
@@ -38,9 +39,11 @@ public:
 	void debugDraw(struct SDL_Renderer* renderer);
 
 	void onShouldActivateBrick(b2Body* body);
+	void onShouldDestroyBrick(b2Body* body);
 
 	//Adds a brick to the world simulation and returns its physics proxy
 	class b2Body* addBrick(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
+	class b2Body* addKillZone(int x, int y, int width, int height, b2BodyType bodyType, float initialRotation = 0.f);
 	class b2Body* addBall(int x, int y, float radius);
 
 	const std::vector<b2Body*>& getBricks();
@@ -54,10 +57,12 @@ private:
 	PhysicsUserData ballUserData;
 	PhysicsUserData brickUserData;
 	PhysicsUserData playerUserData;
+	PhysicsUserData killZoneUserData;
 
 	PhysicsContactListener contactListener;
 
 	std::vector<b2Body*> bricksToEnable;
+	std::vector<b2Body*> bricksToDestroy;
 	std::vector<b2Body*> bricks;
 };
 

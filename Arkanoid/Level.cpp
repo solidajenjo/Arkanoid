@@ -60,8 +60,8 @@ bool Level::init(SDL_Renderer* renderer, Physics& physics)
     physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH) - 1, PIXEL_TO_PHYSICS(SCREEN_HEIGHT / 2), PIXEL_TO_PHYSICS(5), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), b2_staticBody, -0.03f);
     //TOP
     physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), 0, PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), b2_staticBody, 0.01f);
-    //BOTTOM
-    physics.addBrick(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), b2_staticBody);
+    //BOTTOM - Kill zone: it handles destruction of objects on the bottom of the level
+    physics.addKillZone(PIXEL_TO_PHYSICS(SCREEN_WIDTH / 2), PIXEL_TO_PHYSICS(SCREEN_HEIGHT), PIXEL_TO_PHYSICS(SCREEN_WIDTH), PIXEL_TO_PHYSICS(5), b2_staticBody);
  
     
     SDL_Surface* surface = SDL_LoadBMP(GAME_TEXTURE);
