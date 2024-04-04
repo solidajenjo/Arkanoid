@@ -32,3 +32,8 @@ void Player::draw(SDL_Renderer* renderer)
 
     SDL_RenderCopyEx(renderer, texture, &srcRect, &playerRect, 0, NULL, SDL_RendererFlip());
 }
+
+void Player::update(int xDir)
+{
+    playerPhysics->ApplyForce({ static_cast<float>(xDir) * 500000.f, 0.f }, playerPhysics->GetPosition(), true);
+}

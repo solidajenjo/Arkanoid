@@ -5,6 +5,7 @@ public:
 
 	bool init(struct SDL_Renderer* renderer, class Physics& physics);
 	void draw(struct SDL_Renderer* renderer);
+	void update(int xDir);
 
 private:
 

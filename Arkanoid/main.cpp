@@ -74,10 +74,19 @@ int main(int argc, char* argv[])
                     quit = true;
                 }
             }
+
+            const Uint8* keys = SDL_GetKeyboardState(nullptr);
+            int xDir = 0;
+
+            if (keys[SDL_SCANCODE_D]) {
+                xDir = 1;
+            }
+            if (keys[SDL_SCANCODE_A]) {
+                xDir = xDir - 1;
+            }
             
             while (elapsedTime < TARGET_FRAME_TIME) {
                 elapsedTime = SDL_GetTicks() - lastFrameTime;
-                //physics.update();
                 SDL_Delay(1);
             } 
             
@@ -90,6 +99,7 @@ int main(int argc, char* argv[])
             ball.update(renderer, physics);
             physics.update();
             level.draw(renderer, physics);
+            player.update(xDir);
             player.draw(renderer);
 #if _DEBUG
             physics.debugDraw(renderer);
