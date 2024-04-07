@@ -126,7 +126,7 @@ b2Body* Physics::addBall(float x, float y, float radius)
     bodyDef.position.Set(x, y);
 
     auto newBody = world->CreateBody(&bodyDef);
-    newBody->SetAwake(false);
+    newBody->SetAwake(true);
 
     b2CircleShape circleShape;
     
@@ -275,18 +275,36 @@ void PhysicsContactListener::BeginContact(b2Contact* contact)
     b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
 
-    auto userDataA = (PhysicsUserData*)bodyA->GetUserData().pointer;
-    auto userDataB = (PhysicsUserData*)bodyB->GetUserData().pointer;
+    auto userDataA = reinterpret_cast<PhysicsUserData*>(bodyA->GetUserData().pointer);
+    auto userDataB = reinterpret_cast<PhysicsUserData*>(bodyB->GetUserData().pointer);
     if (userDataA->type != userDataB->type)
     {
         //If something collides with a brick and the brick its still kinematic activate it 
         if (userDataA->type == EntityType::Brick && bodyA->GetType() == b2_kinematicBody)
         {
             physics->onShouldActivateBrick(bodyA);
+            return;
         }
         if (userDataB->type == EntityType::Brick && bodyB->GetType() == b2_kinematicBody)
         {
             physics->onShouldActivateBrick(bodyB);
+            return;
+        }
+
+        if (userDataA->type == EntityType::Player && userDataB->type == EntityType::Ball)
+        {
+            b2Vec2 p = bodyB->GetPosition();
+            b2Vec2 c = bodyA->GetPosition();
+            bodyB->SetLinearVelocity((p - c) + b2Vec2(0, BALL_VERT_MODIFICATION_ON_PLAYER_HIT));
+            return;
+        }
+
+        if (userDataB->type == EntityType::Player && userDataA->type == EntityType::Ball)
+        {
+            b2Vec2 p = bodyA->GetPosition();
+            b2Vec2 c = bodyB->GetPosition();
+            bodyB->SetLinearVelocity((p - c) + b2Vec2(0, BALL_VERT_MODIFICATION_ON_PLAYER_HIT));
+            return;
         }
     }
 

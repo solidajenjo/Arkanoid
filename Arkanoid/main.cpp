@@ -54,11 +54,9 @@ int main(int argc, char* argv[])
     physics.init();
     Level level;
     Player player;
+    Ball ball;
     
-    if (level.init(renderer, physics) && player.init(renderer, physics)){
-
-        Ball ball;
-        ball.init(physics);
+    if (level.init(renderer, physics) && player.init(renderer, physics) && ball.init(renderer, physics)){
 
         int lastFrameTime = SDL_GetTicks(); 
 
@@ -83,6 +81,10 @@ int main(int argc, char* argv[])
             }
             if (keys[SDL_SCANCODE_A]) {
                 xDir = xDir - 1;
+            }
+            if (keys[SDL_SCANCODE_ESCAPE])
+            {
+                quit = true;
             }
             
             while (elapsedTime < TARGET_FRAME_TIME) {

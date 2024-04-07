@@ -6,9 +6,22 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 
-void Ball::init(Physics& physics)
+bool Ball::init(struct SDL_Renderer* renderer, Physics& physics)
 {
 	ballPhysics = physics.addBall(PIXEL_TO_PHYSICS(400), PIXEL_TO_PHYSICS(500), PIXEL_TO_PHYSICS(5));
+	
+	SDL_Surface* surface = SDL_LoadBMP(GAME_TEXTURE);
+	if (!surface) {
+		return false;
+	}
+
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	if (!texture) {
+		return false;
+	}
+
+	return true;
 }
 
 void Ball::update(SDL_Renderer* renderer, Physics& physics)
@@ -19,15 +32,8 @@ void Ball::update(SDL_Renderer* renderer, Physics& physics)
 	ballVelocity *= BALL_SPEED;
 	ballPhysics->SetLinearVelocity(ballVelocity);
 
-	SDL_Rect boxRect;
-	boxRect.x = PHYSICS_TO_PIXEL(ballPos.x); // x-coordinate of top-left corner
-	boxRect.y = PHYSICS_TO_PIXEL(ballPos.y);  // y-coordinate of top-left corner
-	boxRect.w = 20;  // width of the box
-	boxRect.h = 20;  // height of the box
+	SDL_Rect srcRect = BALL_TEX_RECT;
+	SDL_Rect ballRect = { static_cast<int>(PHYSICS_TO_PIXEL(ballPos.x)) - BALL_WIDTH / 2, static_cast<int>(PHYSICS_TO_PIXEL(ballPos.y)) - BALL_HEIGHT / 2, BALL_WIDTH, BALL_HEIGHT };
 
-	// Set the render color (example: blue)
-	SDL_SetRenderDrawColor(renderer,  0, 0, 255, 255 );
-
-	// Draw the filled box
-	SDL_RenderFillRect(renderer, &boxRect);
+	SDL_RenderCopyEx(renderer, texture, &srcRect, &ballRect, 0, NULL, SDL_RendererFlip());
 }
