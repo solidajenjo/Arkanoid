@@ -74,121 +74,53 @@ void Physics::onShouldDestroyBrick(b2Body* body)
     bricksToDestroy.push_back(body);
 }
 
+//NOTE: To set the user data of the bodies give the address of the instantiated members of type PhysicsUserData in this class
+
 b2Body* Physics::addBrick(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation)
 {
-    // Define body definition
-    b2BodyDef bodyDef;
-    bodyDef.type = bodyType;
-
-    bodyDef.position.Set(x, y);
-    bodyDef.angle = initialRotation;
-
-	auto newBody = world->CreateBody(&bodyDef);
-    newBody->SetAwake(false);
-
-    // Define fixture shape (box in this case)
-    b2PolygonShape boxShape;
-    // Width and height of the box. Slightly reduced to prevent collision detection with nearby bricks
-    boxShape.SetAsBox(width *.49f, height * .5f);
-    
-    // Define fixture properties (material)
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &boxShape;
-    fixtureDef.density = BRICK_DENSITY;
-
-    // Create the fixture and attach it to the body
-    newBody->CreateFixture(&fixtureDef);
-
-    newBody->SetLinearDamping(PHYSICS_BRICK_LINEAR_DAMPING);    
-    newBody->SetAngularDamping(PHYSICS_BRICK_ANGULAR_DAMPING);    
-    newBody->SetUserData(&brickUserData);
-    if (bodyType != b2_staticBody) //ignore static margins
-    {
-        bricks.push_back(newBody);
-    }
-    return newBody;
+    // TODO: Implement this function
+    // Hint: This function was originally implemented to create a brick in the physics world.
+    // You need to define a body definition, set its type, position, and angle.
+    // Then, create a body in the world using the body definition.
+    // Define a box shape and set its dimensions.
+    // Define fixture properties and create a fixture on the body.
+    // Set various properties on the body such as damping and user data.
+    // If the body is not static, add it to the list of bricks.
+    return nullptr;
 }
 
 b2Body* Physics::addKillZone(float x, float y, float width, float height, b2BodyType bodyType, float initialRotation)
 {
-    //Kill zone is like a brick but with different user data
-    b2Body* newBody = addBrick(x, y, width, height, bodyType, initialRotation);
-    newBody->SetUserData(&killZoneUserData);
-    killZone = newBody;
-    return newBody;
+    // TODO: Implement this function
+    // Hint: This function was originally implemented to create a kill zone in the physics world.
+    // It's similar to creating a brick but with different user data.
+    // You need to call the addBrick function and then set the user data to killZoneUserData.
+    return nullptr;
 }
 
 b2Body* Physics::addBall(float x, float y, float radius)
 {
-    // Define body definition
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(x, y);
-
-    auto newBody = world->CreateBody(&bodyDef);
-    newBody->SetAwake(true);
-
-    b2CircleShape circleShape;
-    
-    circleShape.m_radius = radius;
-
-    // Define fixture properties (material)
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &circleShape;
-    fixtureDef.density = BALL_DENSITY;
-    fixtureDef.restitution = BALL_RESTITUTION;
-
-    // Create the fixture and attach it to the body
-    newBody->CreateFixture(&fixtureDef);
-
-    newBody->SetLinearDamping(0);
-    newBody->SetLinearVelocity({ static_cast<float>((rand() % 10) - 5) , static_cast<float>((rand() % 10) - 5) });
-    newBody->SetGravityScale(0);    
-
-    newBody->SetUserData(&ballUserData);
-
-    return newBody;
+    // TODO: Implement this function
+    // Hint: This function was originally implemented to create a ball in the physics world.
+    // You need to define a body definition, set its type and position.
+    // Then, create a body in the world using the body definition.
+    // Define a circle shape and set its radius.
+    // Define fixture properties and create a fixture on the body.
+    // Set various properties on the body such as damping, linear velocity, gravity scale, and user data.
+    return nullptr;
 }
 
 b2Body* Physics::addPlayer(float x, float y, float width, float height)
 {
-    // Define body definition
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-
-    bodyDef.position.Set(x, y);
-
-    auto newBody = world->CreateBody(&bodyDef);
-    newBody->SetAwake(true);
-
-    // Define fixture shape (box in this case)
-    b2PolygonShape boxShape;
-    boxShape.SetAsBox(width, height);
-
-    // Define fixture properties (material)
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &boxShape;
-    fixtureDef.density = PLAYER_DENSITY;
-
-    // Create the fixture and attach it to the body
-    newBody->CreateFixture(&fixtureDef);
-
-    newBody->SetUserData(&playerUserData);
-
-    newBody->SetGravityScale(0.f);
-    newBody->SetLinearDamping(PHYSICS_PLAYER_LINEAR_DAMPING);
-
-    b2PrismaticJointDef jointDef;
-    jointDef.bodyA = killZone; 
-    jointDef.bodyB = newBody;
-    jointDef.localAxisA.Set(1.0f, 0.f);
-    jointDef.localAnchorA.Set(PLAYER_JOINT_LOCAL_ANCHOR);
-    jointDef.lowerTranslation = 0.0f;
-    jointDef.upperTranslation = 0.0f;
-
-    b2Joint* joint = world->CreateJoint(&jointDef);
-
-    return newBody;
+    // TODO: Implement this function
+    // Hint: This function was originally implemented to create a player in the physics world.
+    // You need to define a body definition, set its type and position.
+    // Then, create a body in the world using the body definition.
+    // Define a box shape and set its dimensions.
+    // Define fixture properties and create a fixture on the body.
+    // Set various properties on the body such as gravity scale, linear damping, and user data.
+    // Create a prismatic joint between the player and the kill zone.
+    return nullptr;
 }
 
 const std::vector<b2Body*>& Physics::getBricks()
@@ -271,50 +203,20 @@ void Box2DDebugDraw::DrawPoint(const b2Vec2& p, float size, const b2Color& color
 
 void PhysicsContactListener::BeginContact(b2Contact* contact)
 {
-    // Get the colliding bodies
-    b2Body* bodyA = contact->GetFixtureA()->GetBody();
-    b2Body* bodyB = contact->GetFixtureB()->GetBody();
+    // TODO: Implement this function
+    // Hint: This function was originally implemented to handle the beginning of a contact between two bodies.
+    // You need to get the colliding bodies and their user data.
+    // If the types of the two bodies are different, handle the collision based on the types.
+    // If a brick collides with something and the brick is still kinematic, activate it, check onShouldActivateBrick.
+    // If a player collides with a ball, modify the ball's linear velocity, this new velocity can be obtained from the vector
+    // from the collision point to the center of the player for example
+    // If a kill zone collides with a brick, destroy the brick, check onShouldDestroyBrick.
 
-    auto userDataA = reinterpret_cast<PhysicsUserData*>(bodyA->GetUserData().pointer);
-    auto userDataB = reinterpret_cast<PhysicsUserData*>(bodyB->GetUserData().pointer);
-    if (userDataA->type != userDataB->type)
-    {
-        //If something collides with a brick and the brick its still kinematic activate it 
-        if (userDataA->type == EntityType::Brick && bodyA->GetType() == b2_kinematicBody)
-        {
-            physics->onShouldActivateBrick(bodyA);
-            return;
-        }
-        if (userDataB->type == EntityType::Brick && bodyB->GetType() == b2_kinematicBody)
-        {
-            physics->onShouldActivateBrick(bodyB);
-            return;
-        }
-
-        if (userDataA->type == EntityType::Player && userDataB->type == EntityType::Ball)
-        {
-            b2Vec2 p = bodyB->GetPosition();
-            b2Vec2 c = bodyA->GetPosition();
-            bodyB->SetLinearVelocity((p - c) + b2Vec2(0, BALL_VERT_MODIFICATION_ON_PLAYER_HIT));
-            return;
-        }
-
-        if (userDataB->type == EntityType::Player && userDataA->type == EntityType::Ball)
-        {
-            b2Vec2 p = bodyA->GetPosition();
-            b2Vec2 c = bodyB->GetPosition();
-            bodyB->SetLinearVelocity((p - c) + b2Vec2(0, BALL_VERT_MODIFICATION_ON_PLAYER_HIT));
-            return;
-        }
-    }
-
-    //Kill zone handling
-    if (userDataA->type == EntityType::KillZone && userDataB->type == EntityType::Brick)
-    {
-        physics->onShouldDestroyBrick(bodyB);
-    }
-    if (userDataB->type == EntityType::KillZone && userDataA->type == EntityType::Brick)
-    {
-        physics->onShouldDestroyBrick(bodyA);
-    }
+    // BONUS TODO: Implement power-ups
+    // Hint: When a ball hits a brick, there could be a certain random probability of dropping a power-up.
+    // The power-up could give the player the ability to shoot or make the player bigger.
+    // You will need to define what each power-up does and how the player can get it.
+    // You might need additional clases to handle the power ups and implement new keyboard controls depending of
+    // what powerup are you implementing
 }
+
