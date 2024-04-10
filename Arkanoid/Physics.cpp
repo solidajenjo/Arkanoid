@@ -119,7 +119,8 @@ b2Body* Physics::addPlayer(float x, float y, float width, float height)
     // Define a box shape and set its dimensions.
     // Define fixture properties and create a fixture on the body.
     // Set various properties on the body such as gravity scale, linear damping, and user data.
-    // Create a prismatic joint between the player and the kill zone.
+    // Create a prismatic joint between the player and the kill zone to limit the movement to the 
+    // horizontal axis x only
     return nullptr;
 }
 
